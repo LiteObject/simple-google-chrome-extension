@@ -1,0 +1,20 @@
+{
+    "manifest_version": 2,
+    "name": "Hello World Extension",
+    "version": "1.0",
+    "description": "Displays a 'Hello, World!' message.",
+    "icons": {
+      "16": "icon.png",
+      "48": "icon.png",
+      "128": "icon.png"
+    },
+    "browser_action": {
+      "default_icon": {
+        "16": "icon.png",
+        "48": "icon.png",
+        "128": "icon.png"
+      },
+      "default_popup": "popup.html"
+    },
+    "permissions": ["activeTab"]
+  }
