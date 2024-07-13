@@ -12,58 +12,94 @@ Inside the root folder, create a new file named `manifest.json` and add the foll
 
 ```json
 {
-  "manifest_version": 2,
-  "name": "Hello World Extension",
+  "manifest_version": 3,
+  "name": "Hello Extension",
   "version": "1.0",
-  "description": "Displays a 'Hello, World!' message.",
+  "description": "A simple Hello World! extension",
   "icons": {
-    "16": "icon.png",
-    "48": "icon.png",
-    "128": "icon.png"
-  },
-  "browser_action": {
-    "default_icon": {
       "16": "icon.png",
       "48": "icon.png",
       "128": "icon.png"
-    },
-    "default_popup": "popup.html"
   },
-  "permissions": ["activeTab"]
+  "action": {
+      "default_title": "Read text",
+      "default_icon": {
+          "16": "icon.png",
+          "48": "icon.png",
+          "128": "icon.png"
+      },
+      "default_popup": "popup.html"
+  },
+  "permissions": ["activeTab", "scripting"],
+  "background": {
+      "service_worker": "background.js"
+  }
 }
+
+```
+### 3. Add a `background.js` file.
+In Chrome extensions, a background script is a central part of an extension’s architecture. It runs in the background and can handle events, perform tasks in the background, and manage the extension’s state.
+
+With Manifest V3, background scripts have been replaced by service workers, which are more efficient because they don’t run continuously but can be woken up by events.
+
+Example of `background.js` as a Service Worker in Manifest V3:
+
+```javascript
+// background.js
+
+// Listen for messages from other parts of the extension (e.g., popup or content scripts)
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.type === 'GREETING') {
+        console.log('Received greeting:', message.greeting);
+        sendResponse({ response: 'Hello from the background script!' });
+    }
+});
+
+// Example of handling an event
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    if (changeInfo.status === 'complete' && tab.active) {
+        console.log('Tab updated:', tab);
+    }
+});
+
+```
+#### When to Use a Background Script/Service Worker
+- **Event handling**: Listening for events that occur in the browser (e.g., tab updates, browser actions).
+- **Persistent state**: Maintaining state or data that should persist between different parts of the extension.
+- **Communication**: Facilitating communication between different parts of the extension (e.g., content scripts, popup scripts).
+
+### 4. Create a new file named "popup.js" and add the following content:
+
+```javascript
+document.addEventListener('DOMContentLoaded', function () {
+    const greetingButton = document.getElementById('greetButton');
+
+    greetingButton.addEventListener('click', () => {
+        chrome.runtime.sendMessage({ type: 'GREETING', greeting: 'Hello, background!' }, (response) => {
+            console.log('Response from background:', response.response);
+        });
+    });
+});
+
 ```
 
-### 3. Create a new file named `popup.html` and add the following content:
+### 5. Create a new file named `popup.html` and add the following content:
 
 ```html
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Hello World Extension</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-    }
-  </style>
-  <script src="popup.js"></script>
+    <title>Popup</title>
+    <script src="popup.js"></script>
 </head>
 <body>
-  <h1>Hello, World!</h1>
+    <button id="greetButton">Send Greeting</button>
 </body>
 </html>
+
 ```
 
-### 4. Create a new file named "popup.js" and add the following content:
 
-```javascript
-document.addEventListener('DOMContentLoaded', function() {
-  var h1Element = document.querySelector('h1');
-  h1Element.addEventListener('click', function() {
-    alert('Hello, World!');
-  });
-});
-```
 
 ### 5. Place an image file named "icon.png" (preferably 16x16 pixels) in the root folder.
 
@@ -76,3 +112,22 @@ document.addEventListener('DOMContentLoaded', function() {
 ### 9. The extension should now appear in the list of installed extensions. You can click on the extension icon to see the "Hello, World!" message and clicking on the message will display an alert saying "Hello, World!".
 
 That's it! You've created a basic Google Chrome extension. Feel free to modify the code and experiment with different functionalities. Remember to reload the extension on the chrome://extensions page whenever you make changes to the code.
+
+---
+### Set the following env variable to avoid CORS issue
+
+    $env:OLLAMA_ORIGINS = "*"  
+
+### Set the following env variable to run ollama on a different port
+
+    $env:OLLAMA_HOST = "127.0.0.1:11435" 
+
+---
+
+## Troubleshooting:
+Ensure that the ollama server is properly reading the CORS environment settings and applying the headers.
+
+    curl -i -X OPTIONS http://localhost:11435/api/generate -H "Origin: http://localhost" -H "Access-Control-Request-Method: POST"
+
+## Ollama Endpoints:
+https://github.com/ollama/ollama/blob/main/docs/api.md#list-local-models
