@@ -99,8 +99,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 ```
 
-
-
 ### 5. Place an image file named "icon.png" (preferably 16x16 pixels) in the root folder.
 
 ### 6. Open Google Chrome and navigate to [chrome://extensions](chrome://extensions/).
