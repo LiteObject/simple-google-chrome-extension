@@ -1,6 +1,11 @@
-document.addEventListener('DOMContentLoaded', function() {
-    var h1Element = document.querySelector('h1');
-    h1Element.addEventListener('click', function() {
-      alert('Hello, World!');
-    });
+document.addEventListener('DOMContentLoaded', function () {
+  const greetingButton = document.getElementById('greetButton');
+
+  greetingButton.addEventListener('click', () => {
+      // Send a message to the background script
+      chrome.runtime.sendMessage({ type: 'GREETING', greeting: 'Hello, background!' }, (response) => {
+          // Display an alert with the response message
+          alert('Response from background: ' + response.response);
+      });
   });
+});
