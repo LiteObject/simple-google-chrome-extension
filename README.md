@@ -118,7 +118,7 @@ That's it! You've created a basic Google Chrome extension. Feel free to modify t
 
     $env:OLLAMA_ORIGINS = "*"  
 
-### Set the following env variable to run ollama on a different port
+### Set the following env variable to run ollama on a different port (if default port 11434 is not available)
 
     $env:OLLAMA_HOST = "127.0.0.1:11435" 
 
