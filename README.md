@@ -138,28 +138,4 @@ You can create a basic icon or download one. For this example, we've included a 
 
 That's it! You've created a basic Google Chrome extension. Feel free to modify the code and experiment with different functionalities. Remember to reload the extension on the chrome://extensions page whenever you make changes to the code.
 
----
 
-## Additional Notes
-
-### Ollama Setup (Optional)
-
-If you're planning to integrate with Ollama for AI functionality in the future, here are some useful environment variables:
-
-### Set the following env variable to avoid CORS issue
-
-    $env:OLLAMA_ORIGINS = "*"  
-
-### Set the following env variable to run ollama on a different port (if default port 11434 is not available)
-
-    $env:OLLAMA_HOST = "127.0.0.1:11435" 
-
----
-
-## Troubleshooting:
-Ensure that the ollama server is properly reading the CORS environment settings and applying the headers.
-
-    curl -i -X OPTIONS http://localhost:11435/api/generate -H "Origin: http://localhost" -H "Access-Control-Request-Method: POST"
-
-## Ollama Endpoints:
-https://github.com/ollama/ollama/blob/main/docs/api.md#list-local-models
