@@ -124,8 +124,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 ```
 
-
-
 ### 5. Create a simple icon file
 
 You can create a basic icon or download one. For this example, we've included a simple green icon with the letter "H". The icon should be 128x128 pixels and saved as `icon.png` in the root folder.
@@ -147,6 +145,7 @@ That's it! You've created a basic Google Chrome extension. Feel free to modify t
 ### Ollama Setup (Optional)
 
 If you're planning to integrate with Ollama for AI functionality in the future, here are some useful environment variables:
+
 ### Set the following env variable to avoid CORS issue
 
     $env:OLLAMA_ORIGINS = "*"  
