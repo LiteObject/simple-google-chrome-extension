@@ -22,7 +22,7 @@ Inside the root folder, create a new file named `manifest.json` and add the foll
       "128": "icon.png"
   },
   "action": {
-      "default_title": "Read text",
+      "default_title": "Send Greeting",
       "default_icon": {
           "16": "icon.png",
           "48": "icon.png",
@@ -49,9 +49,10 @@ Example of `background.js` as a Service Worker in Manifest V3:
 
 // Listen for messages from other parts of the extension (e.g., popup or content scripts)
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.type === 'GREETING') {
+    if (message.type === 'GREETING') {        
         console.log('Received greeting:', message.greeting);
         sendResponse({ response: 'Hello from the background script!' });
+        return true; // Indicates that the response is sent asynchronously
     }
 });
 
@@ -76,7 +77,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     greetingButton.addEventListener('click', () => {
         chrome.runtime.sendMessage({ type: 'GREETING', greeting: 'Hello, background!' }, (response) => {
-            console.log('Response from background:', response.response);
+            if (chrome.runtime.lastError) {
+                console.error('Error:', chrome.runtime.lastError);
+                alert('Error communicating with background script');
+                return;
+            }
+            alert('Response from background: ' + response.response);
         });
     });
 });
@@ -90,6 +96,25 @@ document.addEventListener('DOMContentLoaded', function () {
 <html>
 <head>
     <title>Popup</title>
+    <style>
+        body {
+            width: 200px;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
     <script src="popup.js"></script>
 </head>
 <body>
@@ -101,7 +126,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-### 5. Place an image file named "icon.png" (preferably 16x16 pixels) in the root folder.
+### 5. Create a simple icon file
+
+You can create a basic icon or download one. For this example, we've included a simple green icon with the letter "H". The icon should be 128x128 pixels and saved as `icon.png` in the root folder.
 
 ### 6. Open Google Chrome and navigate to [chrome://extensions](chrome://extensions/).
 
@@ -109,11 +136,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
 ### 8. Click on _Load unpacked_ and select the "HelloWorldExtension" folder.
 
-### 9. The extension should now appear in the list of installed extensions. You can click on the extension icon to see the "Hello, World!" message and clicking on the message will display an alert saying "Hello, World!".
+### 9. The extension should now appear in the list of installed extensions. You can click on the extension icon to see the greeting button, and clicking the button will display an alert with the response from the background script.
 
 That's it! You've created a basic Google Chrome extension. Feel free to modify the code and experiment with different functionalities. Remember to reload the extension on the chrome://extensions page whenever you make changes to the code.
 
 ---
+
+## Additional Notes
+
+### Ollama Setup (Optional)
+
+If you're planning to integrate with Ollama for AI functionality in the future, here are some useful environment variables:
 ### Set the following env variable to avoid CORS issue
 
     $env:OLLAMA_ORIGINS = "*"  

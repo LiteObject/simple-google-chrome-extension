@@ -9,7 +9,7 @@
       "128": "icon.png"
   },
   "action": {
-      "default_title": "Read text",
+      "default_title": "Send Greeting",
       "default_icon": {
           "16": "icon.png",
           "48": "icon.png",
@@ -20,5 +20,8 @@
   "permissions": ["activeTab", "scripting"],
   "background": {
       "service_worker": "background.js"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self';"
   }
 }

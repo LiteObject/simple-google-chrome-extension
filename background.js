@@ -2,9 +2,10 @@
 
 // Listen for messages from other parts of the extension (e.g., popup or content scripts)
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.type === 'GREETING') {        
+    if (message.type === 'GREETING') {
         console.log('Received greeting:', message.greeting);
         sendResponse({ response: 'Hello from the background script!' });
+        return true; // Indicates that the response is sent asynchronously
     }
 });
 
